@@ -12,11 +12,16 @@ const OnboardingButton = ({ children, title, icon, themeOverride, ...props }: On
   return (
     <Pressable
       {...props}
-      style={({ pressed }) => [styles.button,  pressed && styles.pressed]}
+      disabled={props.disabled}
+      style={({ pressed }) => [
+        styles.button,
+        pressed && styles.pressed,
+        props.disabled ? { opacity: 0.5 } : null
+      ]}
     >
       {icon}
       {title && <ThemedText themeOverride={themeOverride} variant='paragraph.large.bold'>{title}</ThemedText>}
-    </Pressable>
+  </Pressable>
   )
 }
 
@@ -29,7 +34,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     borderRadius: 32,
-    gap: 8,
+    gap: 12,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(244, 244, 245, 0.12)',

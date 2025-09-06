@@ -3,7 +3,7 @@ import Welcome from '@/components/onboarding/Welcome';
 import { colours } from '@/constants/colours';
 import { Image } from 'expo-image';
 import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Dimensions, StyleSheet } from 'react-native';
 import Animated, {
   Easing,
@@ -17,16 +17,12 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { height: screenHeight } = Dimensions.get('window');
+const animationDuration = 300
 
 const NewOnboarding = () => {
   const darkColours = colours.dark;
   const [activeStep, setActiveStep] = useState(0);
   const [direction, setDirection] = useState<'left' | 'right'>('right');
-  const [entryAnimation, setEntryAnimation] = useState(FadeIn.duration(800).easing(Easing.out(Easing.quad)));
-
-  useEffect(() => {
-    setEntryAnimation(FadeInRight.duration(400).easing(Easing.out(Easing.quad)));
-  }, [activeStep]);
 
   function renderStep() {
     switch (activeStep) {
@@ -34,16 +30,8 @@ const NewOnboarding = () => {
         return (
           <Animated.View
             key="welcome"
-            entering={
-              direction === 'right'
-                ? entryAnimation
-                : FadeInLeft.delay(400).duration(400).easing(Easing.out(Easing.quad))
-            }
-            exiting={
-              direction === 'right'
-                ? FadeOutRight.duration(300).easing(Easing.in(Easing.quad))
-                : FadeOutLeft.duration(300).easing(Easing.in(Easing.quad))
-            }
+            entering={FadeIn.delay(animationDuration).duration(animationDuration).easing(Easing.out(Easing.quad))}
+            exiting={FadeOut.duration(animationDuration).easing(Easing.in(Easing.quad))}
             style={styles.stepContainer}
           >
             <Welcome setActiveStep={setActiveStep} setDirection={setDirection} />
@@ -55,13 +43,13 @@ const NewOnboarding = () => {
             key="enterEmail"
             entering={
               direction === 'right'
-                ? FadeInRight.delay(400).duration(400).easing(Easing.out(Easing.quad))
-                : FadeInLeft.duration(400).easing(Easing.out(Easing.quad))
+                ? FadeInRight.delay(animationDuration).duration(animationDuration).easing(Easing.out(Easing.quad))
+                : FadeInLeft.duration(animationDuration).easing(Easing.out(Easing.quad))
             }
             exiting={
               direction === 'right'
-                ? FadeOutRight.duration(300).easing(Easing.in(Easing.quad))
-                : FadeOutLeft.duration(300).easing(Easing.in(Easing.quad))
+                ? FadeOutRight.duration(animationDuration).easing(Easing.in(Easing.quad))
+                : FadeOutLeft.duration(animationDuration).easing(Easing.in(Easing.quad))
             }
             style={styles.stepContainer}
           >
@@ -85,8 +73,8 @@ const NewOnboarding = () => {
       </Animated.View>
       {activeStep === 1 && (
         <Animated.View
-          entering={FadeIn.duration(300).easing(Easing.out(Easing.quad))}
-          exiting={FadeOut.duration(300).easing(Easing.in(Easing.quad))}
+          entering={FadeIn.duration(animationDuration).easing(Easing.out(Easing.quad))}
+          exiting={FadeOut.duration(animationDuration).easing(Easing.in(Easing.quad))}
           style={styles.overlay}
         />
       )}

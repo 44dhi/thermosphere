@@ -8,6 +8,9 @@ export const colours = {
     },
   },
   dark: {
+    primary: {
+      foreground: '#746EFF',
+    },
     fills: {
       main: {
         foreground: '#f4f4f5',

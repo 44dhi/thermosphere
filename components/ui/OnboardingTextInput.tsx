@@ -1,5 +1,5 @@
 import { colours } from '@/constants/colours'
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, TextInput, TextInputProps } from 'react-native'
 
 interface OnboardingTextInputProps extends TextInputProps {
@@ -7,11 +7,14 @@ interface OnboardingTextInputProps extends TextInputProps {
 }
 
 const OnboardingTextInput = ({ themeOverride, ...props }: OnboardingTextInputProps) => {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <TextInput
       {...props}
-      style={[styles.input, props.style]}
-      focusable={true}
+      style={[styles.input, props.style, { borderColor: isFocused ? colours.dark.primary.foreground : 'rgba(244, 244, 245, 0.24)' }]}
+      onFocus={() => setIsFocused(true)}
+      onBlur={() => setIsFocused(false)}
       placeholderTextColor={'rgba(244, 244, 245, 0.48)'}
     />
   )

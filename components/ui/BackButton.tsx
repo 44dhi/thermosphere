@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingLeft: 4,
+    paddingLeft: 6,
     paddingRight: 12,
     paddingTop: 8,
     paddingBottom: 8,

@@ -2,7 +2,10 @@ import OnboardingButton from '@/components/ui/OnboardingButton'
 import OnboardingTextInput from '@/components/ui/OnboardingTextInput'
 import ThemedText from '@/components/ui/ThemedText'
 import { colours } from '@/constants/colours'
-import React from 'react'
+import { emailRegex } from '@/constants/regex'
+// import AsyncStorage from '@react-native-async-storage/async-storage'
+import { router } from 'expo-router'
+import React, { useState } from 'react'
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native'
 import BackButton from '../ui/BackButton'
 
@@ -12,16 +15,34 @@ interface EnterEmailProps {
 }
 
 const EnterEmail = ({ setActiveStep, setDirection }: EnterEmailProps) => {
+  const [email, setEmail] = useState('')
+  const [disabled, setDisabled] = useState(true)
+  const [loading, setLoading] = useState(false)
 
-  const onPress = () => {
-    // router.push('/(tabs)')
+  function handleChangeEmail(text: string) {
+    setEmail(text.trim().toLowerCase())
+    setDisabled(!emailRegex.test(text))
+  }
+
+  async function onPress() {
+    try {
+      setLoading(true)
+      console.log('hi')
+      // await AsyncStorage.setItem('email', email)
+      router.push('/(tabs)/thermostat')
+
+    } catch (error) {
+      console.log(error)
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
     <KeyboardAvoidingView 
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 48}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 32}
     >
       <View style={styles.navigation}>
         <BackButton onPress={() => {
@@ -31,19 +52,25 @@ const EnterEmail = ({ setActiveStep, setDirection }: EnterEmailProps) => {
       </View>
       <View style={styles.contentContainer}>
        <View style={styles.textContainer}>
-          <ThemedText themeOverride='dark' variant='heading.x-large'>Enter Your Name</ThemedText>
+          <ThemedText themeOverride='dark' variant='heading.x-large'>Enter Your Email</ThemedText>
           <ThemedText themeOverride='dark' style={{ color: colours.dark.fills.main.description }} variant='paragraph.large.regular'>
             Get Started With ThermoSphere
           </ThemedText>
           <View style={styles.textInputContainer}>
             <OnboardingTextInput 
-              placeholder='Enter Your Name' 
+              autoFocus
+              keyboardType='email-address'
+              autoCapitalize='none'
+              autoComplete='email'
+              value={email}
+              onChangeText={handleChangeEmail}
+              placeholder='Enter your email' 
               style={styles.textInput}
               placeholderTextColor={colours.dark.fills.main.description}
             />
           </View>
         </View>
-        <OnboardingButton title='Continue' themeOverride='dark' onPress={onPress} />
+        <OnboardingButton disabled={disabled || loading} title={loading ? 'Signing In...' : 'Continue'} themeOverride='dark' onPress={onPress} />
       </View>
     </KeyboardAvoidingView>
   )
@@ -56,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: 'relative',
     zIndex: 3,
-    backgroundColor: 'transparent',
+    paddingBottom: 32,
   },
   navigation: {
     paddingLeft: 16,
@@ -75,7 +102,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
     justifyContent: 'space-between',
-    paddingBottom: 32,
     gap: 48,
     zIndex: 3,
   },

@@ -4,7 +4,7 @@ export default function TabLayout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
       <Tabs.Screen
-        name="index"
+        name="thermostat"
         options={{
           title: 'Home',
           animation: 'shift',
