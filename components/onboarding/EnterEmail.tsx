@@ -3,7 +3,7 @@ import OnboardingTextInput from '@/components/ui/OnboardingTextInput'
 import ThemedText from '@/components/ui/ThemedText'
 import { colours } from '@/constants/colours'
 import { emailRegex } from '@/constants/regex'
-// import AsyncStorage from '@react-native-async-storage/async-storage'
+import { setUserEmail } from '@/utils/storage'
 import { router } from 'expo-router'
 import React, { useState } from 'react'
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native'
@@ -27,8 +27,7 @@ const EnterEmail = ({ setActiveStep, setDirection }: EnterEmailProps) => {
   async function onPress() {
     try {
       setLoading(true)
-      console.log('hi')
-      // await AsyncStorage.setItem('email', email)
+      setUserEmail(email)
       router.push('/(tabs)/thermostat')
 
     } catch (error) {
