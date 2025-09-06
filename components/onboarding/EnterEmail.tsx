@@ -28,11 +28,12 @@ const EnterEmail = ({ setActiveStep, setDirection }: EnterEmailProps) => {
     try {
       setLoading(true)
       setUserEmail(email)
-      router.push('/(tabs)/thermostat')
-
+      setTimeout(() => {
+        setLoading(false)
+        router.push('/(tabs)/thermostat')
+      }, 3000)
     } catch (error) {
       console.log(error)
-    } finally {
       setLoading(false)
     }
   }

@@ -20,15 +20,20 @@ export default function RootLayout() {
   useEffect(() => {
     if (!loaded) return;
 
-    const inAuthGroup = segments[0] === '(tabs)';
+    // Use requestAnimationFrame to ensure the component is fully rendered
+    const frame = requestAnimationFrame(() => {
+      const inAuthGroup = segments[0] === '(tabs)';
 
-    if (hasUserEmail() && !inAuthGroup) {
-      // User has email stored, redirect to thermostat
-      router.replace('/(tabs)/thermostat');
-    } else if (!hasUserEmail() && inAuthGroup) {
-      // User doesn't have email stored, redirect to onboarding
-      router.replace('/onboarding');
-    }
+      if (hasUserEmail() && !inAuthGroup) {
+        // User has email stored, redirect to thermostat
+        router.replace('/(tabs)/thermostat');
+      } else if (!hasUserEmail() && inAuthGroup) {
+        // User doesn't have email stored, redirect to onboarding
+        router.replace('/onboarding');
+      }
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [loaded, segments]);
 
   if (!loaded) {
@@ -41,7 +46,7 @@ export default function RootLayout() {
       <Stack initialRouteName="onboarding" screenOptions={{ headerShown: false }}>
         {/* <Stack.Screen name="index" options={{ headerShown: true, animation: 'slide_from_bottom' }} /> */}
         <Stack.Screen name="onboarding" options={{ animation: 'none' }} />
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'fade' }} />
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>
