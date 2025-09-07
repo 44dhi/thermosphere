@@ -27,7 +27,7 @@ const ThermoStat = () => {
           <Image source={require('@/assets/images/cloud_asset.png')} style={styles.image} contentFit="cover" />
           <View style={{ gap: 4 }}>
             <ThemedText style={{ color: colours.dark.fills.main.description }} variant="paragraph.medium.regular">
-              Sunday, September 6
+              Sunday, {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
             </ThemedText>
             <ThemedText variant="heading.small">53ºF, Partly Cloudy</ThemedText>
           </View>

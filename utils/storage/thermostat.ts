@@ -37,7 +37,7 @@ export const getMaxTemperature = (unit: TemperatureUnit): number => {
 export const DEFAULT_THERMOSTAT_SETTINGS: ThermostatSettings = {
   unit: 'fahrenheit',
   temperature: 72,
-  currentTemperature: 50, // Start with a lower current temperature
+  currentTemperature: 68, // Start with a lower current temperature
   active: true,
 };
 

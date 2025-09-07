@@ -19,25 +19,29 @@ const Settings = () => {
   const colorTheme = colorScheme === 'dark' ? colours.dark : colours.light;
   const [vacationMode, setVacationMode] = useState(false);
   const [brightness, setBrightness] = useState(0.8);
+  const [loading, setLoading] = useState(false);
 
   function onPress() {
     removeUserEmail();
+    setLoading(true);
     setThermostatSettings({
       unit: 'fahrenheit',
       temperature: 55,
-      currentTemperature: 55,
+      currentTemperature: 68,
       active: false,
     });
-    Toast.show({
-      type: 'default',
-      text1: 'Logged out successfully',
-      position: 'top',
-      topOffset: 130,
-      props: {
-        type: 'info'
-      }
-    });
-    router.replace('/onboarding');
+    setTimeout(() => {
+      Toast.show({
+        type: 'default',
+        text1: 'Logged out successfully',
+        position: 'top',
+        topOffset: 130,
+        props: {
+          type: 'info'
+        }
+      });
+      router.replace('/onboarding');
+    }, 3000);
   }
 
   return (
@@ -147,6 +151,7 @@ const Settings = () => {
           title="Sign Out"
           icon={<LogOut size={20} color={colorTheme.fills.main.foreground} />}
           onPress={onPress}
+          loading={loading}
         />
       </Animated.ScrollView>
     </SafeAreaView>

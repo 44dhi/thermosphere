@@ -95,6 +95,7 @@ const EnterEmail = ({ setActiveStep, setDirection }: EnterEmailProps) => {
           title={loading ? 'Signing In...' : 'Continue'}
           themeOverride="dark"
           onPress={onPress}
+          loading={loading}
         />
       </View>
     </KeyboardAvoidingView>
