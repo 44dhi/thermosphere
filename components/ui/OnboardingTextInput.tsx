@@ -1,9 +1,9 @@
-import { colours } from '@/constants/colours'
-import React, { useState } from 'react'
-import { StyleSheet, TextInput, TextInputProps } from 'react-native'
+import { colours } from '@/constants/colours';
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, TextInputProps } from 'react-native';
 
 interface OnboardingTextInputProps extends TextInputProps {
-  themeOverride?: 'dark' | 'light'
+  themeOverride?: 'dark' | 'light';
 }
 
 const OnboardingTextInput = ({ themeOverride, ...props }: OnboardingTextInputProps) => {
@@ -12,15 +12,19 @@ const OnboardingTextInput = ({ themeOverride, ...props }: OnboardingTextInputPro
   return (
     <TextInput
       {...props}
-      style={[styles.input, props.style, { borderColor: isFocused ? colours.dark.primary.foreground : 'rgba(244, 244, 245, 0.24)' }]}
+      style={[
+        styles.input,
+        props.style,
+        { borderColor: isFocused ? colours.dark.primary.foreground : 'rgba(244, 244, 245, 0.24)' },
+      ]}
       onFocus={() => setIsFocused(true)}
       onBlur={() => setIsFocused(false)}
       placeholderTextColor={'rgba(244, 244, 245, 0.48)'}
     />
-  )
-}
+  );
+};
 
-export default OnboardingTextInput
+export default OnboardingTextInput;
 
 const styles = StyleSheet.create({
   input: {
@@ -35,4 +39,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontFamily: 'Geist',
   },
-})
+});

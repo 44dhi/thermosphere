@@ -17,7 +17,7 @@ import Animated, {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { height: screenHeight } = Dimensions.get('window');
-const animationDuration = 300
+const animationDuration = 300;
 
 const NewOnboarding = () => {
   const darkColours = colours.dark;

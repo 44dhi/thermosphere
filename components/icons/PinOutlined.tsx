@@ -1,14 +1,8 @@
-import * as React from "react"
-import Svg, { Path, SvgProps } from "react-native-svg"
+import * as React from 'react';
+import Svg, { Path, SvgProps } from 'react-native-svg';
 
 const PinOutlined = (props: SvgProps) => (
-  <Svg
-    viewBox="0 0 48 48"
-    width={48}
-    height={48}
-    fill="none"
-    {...props}
-  >
+  <Svg viewBox="0 0 48 48" width={48} height={48} fill="none" {...props}>
     <Path
       fill="#EF4444"
       fillRule="evenodd"
@@ -36,5 +30,5 @@ const PinOutlined = (props: SvgProps) => (
       d="M27.025 17.52a4.278 4.278 0 1 1-6.05 6.05 4.278 4.278 0 0 1 6.05-6.05"
     />
   </Svg>
-)
-export default PinOutlined
+);
+export default PinOutlined;

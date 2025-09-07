@@ -22,9 +22,7 @@ export const TEMPERATURE_CONSTRAINTS = {
 
 // Helper functions to get temperature constraints based on unit
 export const getTemperatureConstraints = (unit: TemperatureUnit) => {
-  return unit === 'fahrenheit' 
-    ? TEMPERATURE_CONSTRAINTS.FAHRENHEIT 
-    : TEMPERATURE_CONSTRAINTS.CELSIUS;
+  return unit === 'fahrenheit' ? TEMPERATURE_CONSTRAINTS.FAHRENHEIT : TEMPERATURE_CONSTRAINTS.CELSIUS;
 };
 
 export const getMinTemperature = (unit: TemperatureUnit): number => {
@@ -57,12 +55,9 @@ export const getThermostatUnit = (): TemperatureUnit => {
 export const setThermostatTemperature = (temperature: number, unit?: TemperatureUnit): void => {
   const currentUnit = unit || getThermostatUnit();
   const constraints = getTemperatureConstraints(currentUnit);
-  
+
   // Clamp temperature within valid range for the current unit
-  const clampedTemp = Math.max(
-    constraints.MIN,
-    Math.min(constraints.MAX, temperature)
-  );
+  const clampedTemp = Math.max(constraints.MIN, Math.min(constraints.MAX, temperature));
   storage.set(THERMOSTAT_KEYS.TEMPERATURE, clampedTemp);
 };
 
@@ -75,12 +70,9 @@ export const getThermostatTemperature = (): number => {
 export const setCurrentTemperature = (temperature: number, unit?: TemperatureUnit): void => {
   const currentUnit = unit || getThermostatUnit();
   const constraints = getTemperatureConstraints(currentUnit);
-  
+
   // Clamp temperature within valid range for the current unit
-  const clampedTemp = Math.max(
-    constraints.MIN,
-    Math.min(constraints.MAX, temperature)
-  );
+  const clampedTemp = Math.max(constraints.MIN, Math.min(constraints.MAX, temperature));
   storage.set(THERMOSTAT_KEYS.CURRENT_TEMPERATURE, clampedTemp);
 };
 
@@ -102,7 +94,7 @@ export const getThermostatActive = (): boolean => {
 // Combined settings functions
 export const setThermostatSettings = (settings: Partial<ThermostatSettings>): void => {
   const currentUnit = settings.unit || getThermostatUnit();
-  
+
   if (settings.unit !== undefined) {
     setThermostatUnit(settings.unit);
   }
@@ -132,22 +124,24 @@ export const resetThermostatSettings = (): void => {
 };
 
 export const hasThermostatSettings = (): boolean => {
-  return storage.contains(THERMOSTAT_KEYS.UNIT) || 
-         storage.contains(THERMOSTAT_KEYS.TEMPERATURE) || 
-         storage.contains(THERMOSTAT_KEYS.CURRENT_TEMPERATURE) ||
-         storage.contains(THERMOSTAT_KEYS.ACTIVE);
+  return (
+    storage.contains(THERMOSTAT_KEYS.UNIT) ||
+    storage.contains(THERMOSTAT_KEYS.TEMPERATURE) ||
+    storage.contains(THERMOSTAT_KEYS.CURRENT_TEMPERATURE) ||
+    storage.contains(THERMOSTAT_KEYS.ACTIVE)
+  );
 };
 
 // Temperature conversion utilities
 export const convertTemperature = (temp: number, fromUnit: TemperatureUnit, toUnit: TemperatureUnit): number => {
   if (fromUnit === toUnit) return temp;
-  
+
   if (fromUnit === 'cel' && toUnit === 'fahrenheit') {
-    return (temp * 9/5) + 32;
+    return (temp * 9) / 5 + 32;
   } else if (fromUnit === 'fahrenheit' && toUnit === 'cel') {
-    return (temp - 32) * 5/9;
+    return ((temp - 32) * 5) / 9;
   }
-  
+
   return temp;
 };
 
@@ -159,25 +153,25 @@ export const formatTemperature = (temp: number, unit: TemperatureUnit): string =
 // Temperature animation utilities
 export const animateTemperatureTowardsTarget = (): void => {
   const settings = getThermostatSettings();
-  
+
   // Only animate if HVAC is active
   if (!settings.active) {
     return;
   }
-  
+
   const currentTemp = settings.currentTemperature;
   const targetTemp = settings.temperature;
   const difference = targetTemp - currentTemp;
-  
+
   // If already at target, no need to animate
   if (Math.abs(difference) < 0.1) {
     return;
   }
-  
+
   // Move 1 degree towards target (or 0.5 degrees for smaller steps)
-  const step = Math.abs(difference) > 1 ? (difference > 0 ? 1 : -1) : (difference > 0 ? 0.5 : -0.5);
+  const step = Math.abs(difference) > 1 ? (difference > 0 ? 1 : -1) : difference > 0 ? 0.5 : -0.5;
   const newCurrentTemp = currentTemp + step;
-  
+
   setCurrentTemperature(newCurrentTemp);
 };
 
@@ -189,11 +183,11 @@ export const startTemperatureAnimation = (): void => {
   if (temperatureAnimationInterval) {
     clearInterval(temperatureAnimationInterval);
   }
-  
+
   // Start new interval - animate every 10 seconds
   temperatureAnimationInterval = setInterval(() => {
     animateTemperatureTowardsTarget();
-  }, 10000);
+  }, 5000);
 };
 
 export const stopTemperatureAnimation = (): void => {

@@ -5,36 +5,38 @@ import { Pressable, PressableProps, StyleSheet, View } from 'react-native';
 import ThemedText from './ThemedText';
 
 interface BackButtonProps extends PressableProps {
-  onPress: () => void,
-  themeOverride?: 'dark' | 'light',
+  onPress: () => void;
+  themeOverride?: 'dark' | 'light';
 }
 
 const BackButton = ({ onPress, themeOverride, ...props }: BackButtonProps) => {
-  const navigate = useNavigation()
+  const navigate = useNavigation();
 
   const handlePress = () => {
     if (onPress) {
-      onPress()
+      onPress();
     } else {
-      navigate.goBack()
+      navigate.goBack();
     }
-  }
-  
+  };
+
   return (
     <Pressable
       onPress={handlePress || undefined}
-      style={({ pressed }) => [styles.container,  pressed && styles.containerHover]}
+      style={({ pressed }) => [styles.container, pressed && styles.containerHover]}
       {...props}
     >
       <View style={styles.content}>
-      <Entypo name="chevron-left" style={{marginTop: 3}} size={24} color="white" />
-        <ThemedText themeOverride={themeOverride} variant='paragraph.large.bold'>Back</ThemedText>
+        <Entypo name="chevron-left" style={{ marginTop: 3 }} size={24} color="white" />
+        <ThemedText themeOverride={themeOverride} variant="paragraph.large.bold">
+          Back
+        </ThemedText>
       </View>
     </Pressable>
-  )
-}
+  );
+};
 
-export default BackButton
+export default BackButton;
 
 const styles = StyleSheet.create({
   container: {
@@ -45,7 +47,6 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 8,
     borderRadius: 32,
-
   },
   content: {
     flexDirection: 'row',
@@ -54,5 +55,5 @@ const styles = StyleSheet.create({
   },
   containerHover: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-  }
-})
+  },
+});

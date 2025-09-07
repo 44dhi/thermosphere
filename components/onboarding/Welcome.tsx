@@ -1,22 +1,22 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import OnboardingButton from '@/components/ui/OnboardingButton'
-import ThemedText from '@/components/ui/ThemedText'
-import { removeUserEmail } from '@/utils/storage'
-import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
-import { Image } from 'expo-image'
-import React from 'react'
-import { StyleSheet, View } from 'react-native'
-import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated'
+import OnboardingButton from '@/components/ui/OnboardingButton';
+import ThemedText from '@/components/ui/ThemedText';
+import { removeUserEmail } from '@/utils/storage';
+import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
+import { Image } from 'expo-image';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
+import Animated, { Easing, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
 
 interface WelcomeProps {
-  setDirection: (direction: 'left' | 'right') => void
-  setActiveStep: (step: number) => void
+  setDirection: (direction: 'left' | 'right') => void;
+  setActiveStep: (step: number) => void;
 }
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 const Welcome = ({ setActiveStep, setDirection }: WelcomeProps) => {
-  const defaultAnim = useSharedValue<number>( 20);
+  const defaultAnim = useSharedValue<number>(20);
 
   const animatedDefault = useAnimatedStyle(() => ({
     transform: [{ translateY: defaultAnim.value }],
@@ -29,48 +29,52 @@ const Welcome = ({ setActiveStep, setDirection }: WelcomeProps) => {
         easing: Easing.linear,
       }),
       -1,
-      true
+      true,
     );
-  }, []); 
+  }, []);
 
   const onPress = () => {
-    console.log('onPress')
-    removeUserEmail()
-    setDirection('right')
-    setActiveStep(1)
-  }
+    console.log('onPress');
+    removeUserEmail();
+    setDirection('right');
+    setActiveStep(1);
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <View style={styles.textContainer}>
-          <ThemedText themeOverride='dark' variant='heading.xxx-large'>ThermoSphere</ThemedText>
-          <ThemedText themeOverride='dark' variant='paragraph.large.regular'>Stay Warm. Stay Native.</ThemedText>
+          <ThemedText themeOverride="dark" variant="heading.xxx-large">
+            ThermoSphere
+          </ThemedText>
+          <ThemedText themeOverride="dark" variant="paragraph.large.regular">
+            Stay Warm. Stay Native.
+          </ThemedText>
         </View>
         <OnboardingButton
-          title='Continue With Email'
+          title="Continue With Email"
           icon={<FontAwesome6 name="envelope" size={20} color="white" />}
-          themeOverride='dark'
+          themeOverride="dark"
           onPress={onPress}
         />
       </View>
       <AnimatedImage
         source={require('@/assets/images/spark_logo.png')}
         style={[styles.image, animatedDefault]}
-        contentFit='cover'
+        contentFit="cover"
       />
     </View>
-  )
-}
+  );
+};
 
-export default Welcome
+export default Welcome;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: 'relative',
     backgroundColor: 'transparent',
-    paddingBottom: 24
+    paddingBottom: 24,
   },
   contentContainer: {
     paddingLeft: 40,
@@ -88,7 +92,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     gap: 16,
     textAlign: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   image: {
     width: '100%',
@@ -97,6 +101,5 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     zIndex: 2,
-
-  }
-})
+  },
+});

@@ -24,9 +24,6 @@ export default function RootLayout() {
     const frame = requestAnimationFrame(() => {
       const inAuthGroup = segments[0] === '(tabs)';
 
-      console.log('inAuthGroup', inAuthGroup)
-      console.log('hasUserEmail', hasUserEmail())
-
       if (hasUserEmail() && !inAuthGroup) {
         // User has email stored, redirect to thermostat
         router.replace('/(tabs)/thermostat');
