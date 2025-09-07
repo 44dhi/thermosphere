@@ -4,7 +4,7 @@ import { colours } from '@/constants/colours';
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, useColorScheme, View } from 'react-native';
-import Animated, { Easing, FadeIn } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const ThermoStat = () => {
@@ -16,7 +16,7 @@ const ThermoStat = () => {
   return (
     <SafeAreaView edges={['left', 'right']} style={[styles.safeArea, { backgroundColor: backgroundColor }]}>
       <Animated.ScrollView
-        entering={FadeIn.duration(300).easing(Easing.out(Easing.quad))}
+        entering={FadeInDown.delay(200).duration(300).easing(Easing.out(Easing.quad))}
         style={[styles.container]}
         contentContainerStyle={styles.contentContainer}
       >

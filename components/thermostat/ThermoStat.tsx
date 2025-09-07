@@ -12,13 +12,16 @@ import {
 } from '@/utils/storage';
 import { Image } from 'expo-image';
 import { Minus, Plus, Power } from 'lucide-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
+import Animated, { Easing, FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
 import TemperatureSpokes from '../icons/TemperatureSpokes';
 import ThermoStatControlBackground from '../icons/ThermoStatControlBackground';
 import TemperatureControlButton from '../ui/TemperatureControlButton';
 import TemperatureToggle from '../ui/TemperatureToggle';
 import ThemedText from '../ui/ThemedText';
+
+const AnimatedImage = Animated.createAnimatedComponent(Image);
 
 const ThermoStat = () => {
   const colorScheme = useColorScheme();
@@ -28,6 +31,14 @@ const ThermoStat = () => {
     colorScheme === 'dark' ? colours.dark.fills.main.description : colours.light.fills.main.description;
 
   const [settings, setSettings] = useState(getThermostatSettings());
+  const knobRotation = useSharedValue(0);
+  const spokeRotation = useSharedValue(0);
+  
+  // Animated values for text transitions
+  const temperatureTextOpacity = useSharedValue(1);
+  const currentTempTextOpacity = useSharedValue(1);
+  const temperatureTextScale = useSharedValue(1);
+  const currentTempTextScale = useSharedValue(1);
 
   useEffect(() => {
     setSettings(getThermostatSettings());
@@ -42,6 +53,49 @@ const ThermoStat = () => {
       clearInterval(updateInterval);
     };
   }, []);
+
+  // Function to animate text changes
+  const animateTextChange = useCallback((isTemperatureChange: boolean) => {
+    if (isTemperatureChange) {
+      // Animate temperature text
+      temperatureTextOpacity.value = withSequence(
+        withTiming(0.7, { duration: 150 }),
+        withTiming(1, { duration: 150 })
+      );
+      temperatureTextScale.value = withSequence(
+        withTiming(0.95, { duration: 150 }),
+        withSpring(1, { damping: 15, stiffness: 150 })
+      );
+    } else {
+      // Animate current temperature text
+      currentTempTextOpacity.value = withSequence(
+        withTiming(0.7, { duration: 150 }),
+        withTiming(1, { duration: 150 })
+      );
+      currentTempTextScale.value = withSequence(
+        withTiming(0.95, { duration: 150 }),
+        withSpring(1, { damping: 15, stiffness: 150 })
+      );
+    }
+  }, [temperatureTextOpacity, temperatureTextScale, currentTempTextOpacity, currentTempTextScale]);
+
+  useEffect(() => {
+    const newKnobRotation = getKnobRotation(settings.temperature, settings.unit);
+    const newSpokeRotation = getKnobRotation(settings.currentTemperature, settings.unit);
+    
+    knobRotation.value = withTiming(newKnobRotation, { duration: 300 });
+    spokeRotation.value = withTiming(newSpokeRotation, { duration: 300 });
+  }, [settings.temperature, settings.currentTemperature, settings.unit, knobRotation, spokeRotation]);
+
+  // Separate useEffect to track temperature changes for text animation
+  useEffect(() => {
+    animateTextChange(true);
+  }, [settings.temperature, settings.unit, animateTextChange]);
+
+  // Separate useEffect to track current temperature changes for text animation
+  useEffect(() => {
+    animateTextChange(false);
+  }, [settings.currentTemperature, animateTextChange]);
 
   const handleTemperatureChange = (delta: number) => {
     const newTemp = settings.temperature + delta;
@@ -71,19 +125,51 @@ const ThermoStat = () => {
   };
 
   // Function to map temperature to rotation angle (-120 to 120 degrees)
-  const getKnobRotation = (temperature: number, unit: TemperatureUnit): string => {
+  const getKnobRotation = (temperature: number, unit: TemperatureUnit): number => {
     const minTemp = getMinTemperature(unit);
     const maxTemp = getMaxTemperature(unit);
 
-    // Map temperature from [minTemp, maxTemp] to [-120, 120] degrees
     const normalizedTemp = (temperature - minTemp) / (maxTemp - minTemp);
-    const rotation = -120 + normalizedTemp * 240; // 240 is the total range (120 - (-120))
+    const rotation = -120 + normalizedTemp * 240;
 
-    return `${rotation}deg`;
+    return rotation;
   };
 
+  // Animated styles for smooth rotation
+  const knobAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateX: '-50%' },
+        { translateY: '-50%' },
+        { rotate: `${knobRotation.value}deg` },
+      ],
+    };
+  });
+
+  const spokeAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${spokeRotation.value}deg` }],
+    };
+  });
+
+  // Animated styles for text transitions
+  const temperatureTextAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: temperatureTextOpacity.value,
+      transform: [{ scale: temperatureTextScale.value }],
+    };
+  });
+
+  const currentTempTextAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: currentTempTextOpacity.value,
+      transform: [{ scale: currentTempTextScale.value }],
+    };
+  });
+
   return (
-    <View style={styles.container}>
+    <View
+     style={styles.container}>
       <View style={styles.temperatureContainer}>
         <View style={[styles.thermoStatBackground, { opacity: settings.active ? 1 : 0.5 }]}>
           <ThermoStatControlBackground color={colorScheme === 'dark' ? 'white' : 'black'} />
@@ -91,58 +177,61 @@ const ThermoStat = () => {
             <TemperatureSpokes color={colorScheme === 'dark' ? 'white' : 'black'} />
           </View>
           <View style={styles.temperatureSpokesContainer}>
-            <Image
+            <AnimatedImage
               source={require('@/assets/images/active_spoke.png')}
               style={[
                 { width: 312, height: 312 },
                 colorScheme === 'light' && {
                   tintColor: '#6d45fc',
                 },
-                {
-                  transform: [{ rotate: getKnobRotation(settings.currentTemperature, settings.unit) }],
-                },
+                spokeAnimatedStyle,
               ]}
               contentFit="cover"
             />
           </View>
-          <Image
-            source={require('@/assets/images/thermo_knob.png')}
-            style={[
-              styles.temperatureKnobContainer,
-              !settings.active && { opacity: 0 },
-              colorScheme === 'light' && {
-                tintColor: '#666666',
-              },
-              {
-                transform: [
-                  { translateX: '-50%' },
-                  { translateY: '-50%' },
-                  { rotate: getKnobRotation(settings.temperature, settings.unit) },
-                ],
-              },
-            ]}
-          />
+          {
+            settings.active && (
+              <AnimatedImage
+                entering={FadeIn.duration(300).easing(Easing.out(Easing.quad))}
+                exiting={FadeOut.duration(300).easing(Easing.out(Easing.quad))}
+                source={require('@/assets/images/thermo_knob.png')}
+                style={[
+                  styles.temperatureKnobContainer,
+                  colorScheme === 'light' && {
+                    tintColor: '#666666',
+                  },
+                  knobAnimatedStyle,
+                ]}
+                />
+            )
+          }
         </View>
         <View style={styles.textContainer}>
           <ThemedText style={{ color: descriptionColor }} variant="paragraph.large.bold">
             {
-              settings.active ? 'Temperature' : '---'
+              settings.active ? 'Temperature' : ''
             }
           </ThemedText>
           {settings.active ? (
             <Pressable onPress={handleUnitToggle}>
-              <ThemedText variant="heading.xxx-large" style={{ color: foregroundColor }}>
-                {formatTemperature(settings.temperature, settings.unit)}
-              </ThemedText>
+              <Animated.View style={temperatureTextAnimatedStyle}>
+                <ThemedText variant="heading.xxx-large" style={{ color: foregroundColor }}>
+                  {formatTemperature(settings.temperature, settings.unit)}
+                </ThemedText>
+              </Animated.View>
             </Pressable>
           ) : (
-            <ThemedText variant="heading.xxx-large" style={{ color: foregroundColor }}>
-              OFF
-            </ThemedText>
+            <Animated.View style={temperatureTextAnimatedStyle}>
+              <ThemedText variant="heading.xxx-large" style={{ color: foregroundColor }}>
+                OFF
+              </ThemedText>
+            </Animated.View>
           )}
-          <ThemedText style={{ color: descriptionColor }} variant="paragraph.large.bold">
-            CURRENTLY {formatTemperature(settings.currentTemperature, settings.unit)}
-          </ThemedText>
+          <Animated.View style={currentTempTextAnimatedStyle}>
+            <ThemedText style={{ color: descriptionColor }} variant="paragraph.large.bold">
+              CURRENTLY {formatTemperature(settings.currentTemperature, settings.unit)}
+            </ThemedText>
+          </Animated.View>
         </View>
       </View>
       <View style={styles.controlsContainer}>
@@ -238,5 +327,6 @@ const styles = StyleSheet.create({
     zIndex: 10,
     justifyContent: 'center',
     alignItems: 'center',
+    // backgroundColor: 'red',
   },
 });

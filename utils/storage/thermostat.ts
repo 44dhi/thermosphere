@@ -150,11 +150,9 @@ export const formatTemperature = (temp: number, unit: TemperatureUnit): string =
   return unit === 'cel' ? `${rounded}°C` : `${rounded}°F`;
 };
 
-// Temperature animation utilities
 export const animateTemperatureTowardsTarget = (): void => {
   const settings = getThermostatSettings();
 
-  // Only animate if HVAC is active
   if (!settings.active) {
     return;
   }
@@ -163,12 +161,10 @@ export const animateTemperatureTowardsTarget = (): void => {
   const targetTemp = settings.temperature;
   const difference = targetTemp - currentTemp;
 
-  // If already at target, no need to animate
   if (Math.abs(difference) < 0.1) {
     return;
   }
 
-  // Move 1 degree towards target (or 0.5 degrees for smaller steps)
   const step = Math.abs(difference) > 1 ? (difference > 0 ? 1 : -1) : difference > 0 ? 0.5 : -0.5;
   const newCurrentTemp = currentTemp + step;
 

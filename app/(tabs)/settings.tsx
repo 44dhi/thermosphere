@@ -1,20 +1,23 @@
+import ProfileCard from '@/components/settings/ProfileCard';
 import OnboardingButton from '@/components/ui/OnboardingButton';
 import ThemedText from '@/components/ui/ThemedText';
 import { colours } from '@/constants/colours';
 import { settings } from '@/constants/settings';
 import { removeUserEmail, setThermostatSettings } from '@/utils/storage';
-import { Image } from 'expo-image';
+import Slider from '@react-native-community/slider';
 import { router } from 'expo-router';
-import { LogOut } from 'lucide-react-native';
+import { LogOut, Sun, TicketsPlane } from 'lucide-react-native';
 import React, { useState } from 'react';
 import { StyleSheet, Switch, useColorScheme, View } from 'react-native';
-import Animated, { Easing, FadeIn } from 'react-native-reanimated';
+import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+
 
 const Settings = () => {
   const colorScheme = useColorScheme();
   const colorTheme = colorScheme === 'dark' ? colours.dark : colours.light;
   const [vacationMode, setVacationMode] = useState(false);
+  const [brightness, setBrightness] = useState(0.8);
 
   function onPress() {
     removeUserEmail();
@@ -33,38 +36,35 @@ const Settings = () => {
       style={[styles.safeArea, { backgroundColor: colorTheme.fills.main.background }]}
     >
       <Animated.ScrollView
-        entering={FadeIn.duration(300).easing(Easing.out(Easing.quad))}
+        entering={FadeInDown.delay(200).duration(300).easing(Easing.out(Easing.quad))}
         style={[styles.container]}
         contentContainerStyle={[styles.contentContainer, { paddingBottom: 100 }]}
         showsVerticalScrollIndicator={false}
         bounces={true}
       >
-        <View style={[styles.mainCard, { backgroundColor: colorTheme.settings.settingItem.background }]}>
-          <Image
-            source={require('@/assets/images/default_profile_image.png')}
-            style={{ width: 48, height: 48 }}
-            contentFit="contain"
-          />
-          <View style={{ gap: 7 }}>
-            <ThemedText variant="heading.small">Aadhit Shanmugam</ThemedText>
-            <ThemedText style={{ color: colorTheme.fills.main.description }} variant="paragraph.small.regular">
-              aadhit32973@gmail.com
-            </ThemedText>
-          </View>
-        </View>
+        <ProfileCard />
         <View style={styles.settingContainer}>
           <ThemedText
-            variant="paragraph.medium.regular"
+            variant="paragraph.small.regular"
             style={[styles.settingTitle, { color: colorTheme.fills.main.description }]}
           >
             Quick Settings
           </ThemedText>
+
           <View style={[styles.settingItem, { backgroundColor: colorTheme.settings.settingItem.background }]}>
             <View style={[styles.settingItemRow, { justifyContent: 'space-between' }]}>
-              <ThemedText variant="paragraph.medium.regular">Vacation Mode</ThemedText>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                <View
+                  style={[styles.settingItemIcon, { backgroundColor: colorTheme.settings.settingItem.iconContainer }]}
+                >
+                  <TicketsPlane size={24} color={colorTheme.fills.main.foreground} />
+                </View>
+                <ThemedText variant="paragraph.medium.regular">Vacation Mode</ThemedText>
+              </View>
               <Switch
                 value={vacationMode}
                 trackColor={{ true: colorTheme.primary.foreground }}
+                thumbColor={ vacationMode ? colorTheme.primary.foreground : colorTheme.fills.main.foreground }
                 onValueChange={setVacationMode}
               />
             </View>
@@ -75,11 +75,38 @@ const Settings = () => {
           >
             Vacation Mode optimises home safety and efficiency while you’re away
           </ThemedText>
+
+          <View style={[styles.settingItem, { backgroundColor: colorTheme.settings.settingItem.background }]}>
+            <View style={{ justifyContent: 'space-between', alignItems: 'center', flexDirection: 'row' }}>
+              <View style={[styles.settingItemRow, { justifyContent: 'space-between' }]}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
+                  <View
+                    style={[styles.settingItemIcon, { backgroundColor: colorTheme.settings.settingItem.iconContainer }]}
+                  >
+                    <Sun size={24} color={colorTheme.fills.main.foreground} />
+                  </View>
+                  <ThemedText variant="paragraph.medium.regular">ThermoStat Brightness</ThemedText>
+                </View>
+              </View>
+              <ThemedText variant="paragraph.medium.regular">{Math.round(brightness * 100)}%</ThemedText>
+            </View>
+            <View style={{ width: '100%', height: 1, backgroundColor: colorTheme.settings.settingItem.divider }} />
+            <Slider
+              style={{width: '100%', height: 56}}
+              minimumValue={0}
+              value={brightness}
+              maximumValue={1}
+              thumbTintColor={colorTheme.primary.foreground}
+              minimumTrackTintColor={colorTheme.primary.foreground}
+              maximumTrackTintColor={colorTheme.primary.foreground}  
+              onValueChange={setBrightness}
+            />
+          </View>
         </View>
         {settings.map(setting => (
           <View key={setting.title} style={styles.settingContainer}>
             <ThemedText
-              variant="paragraph.medium.regular"
+              variant="paragraph.small.regular"
               style={[styles.settingTitle, { color: colorTheme.fills.main.description }]}
             >
               {setting.title}
@@ -123,7 +150,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   container: {
-    paddingTop: 16,
+    paddingTop: 4,
     paddingLeft: 16,
     paddingRight: 16,
     display: 'flex',
@@ -131,16 +158,6 @@ const styles = StyleSheet.create({
   },
   contentContainer: {
     gap: 24,
-  },
-  mainCard: {
-    borderRadius: 20,
-    paddingLeft: 16,
-    paddingRight: 16,
-    paddingTop: 16,
-    paddingBottom: 16,
-    gap: 16,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
   },
   settingContainer: {
     flexDirection: 'column',
