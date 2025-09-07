@@ -4,6 +4,7 @@ export const colours = {
       main: {
         foreground: '#09090b',
         background: '#f4f4f5',
+        description: '#A1A1AA',
       },
     },
   },

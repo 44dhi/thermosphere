@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import OnboardingButton from '@/components/ui/OnboardingButton'
 import ThemedText from '@/components/ui/ThemedText'
+import { removeUserEmail } from '@/utils/storage'
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6'
 import { Image } from 'expo-image'
 import React from 'react'
@@ -33,6 +34,8 @@ const Welcome = ({ setActiveStep, setDirection }: WelcomeProps) => {
   }, []); 
 
   const onPress = () => {
+    console.log('onPress')
+    removeUserEmail()
     setDirection('right')
     setActiveStep(1)
   }
