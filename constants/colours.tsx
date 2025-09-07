@@ -20,6 +20,10 @@ export const colours = {
         shadow: '0 4px 12px 0 rgba(0, 0, 0, 0.01)',
       },
     },
+    toast: {
+      background: '#e4e4e6',
+      border: 'rgba(0, 0, 0, 0.06)',
+    },
     card: {
       background: 'rgba(0, 0, 0, 0.03)',
       border: 'rgba(0, 0, 0, 0.06)',
@@ -64,6 +68,10 @@ export const colours = {
         border: 'rgba(244, 244, 245, 0.24)',
         shadow: '0 4px 12px 0 rgba(23, 23, 23, 0.09)',
       },
+    },
+    toast: {
+      background: '#272728',
+      border: 'rgba(244, 244, 245, 0.12)',
     },
     card: {
       background: 'linear-gradient(90deg, rgba(244, 244, 245, 0.06) 0%, rgba(142, 142, 143, 0.06) 100%)',

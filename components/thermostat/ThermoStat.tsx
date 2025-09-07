@@ -15,6 +15,7 @@ import { Minus, Plus, Power } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
 import Animated, { Easing, FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
+import Toast from 'react-native-toast-message';
 import TemperatureSpokes from '../icons/TemperatureSpokes';
 import ThermoStatControlBackground from '../icons/ThermoStatControlBackground';
 import TemperatureControlButton from '../ui/TemperatureControlButton';
@@ -108,6 +109,16 @@ const ThermoStat = () => {
     const updatedSettings = { ...settings, active: !settings.active };
     setThermostatSettings(updatedSettings);
     setSettings(updatedSettings);
+    Toast.hide();
+    Toast.show({
+        type: 'default',
+        text1: updatedSettings.active ? 'HVAC System ON' : 'HVAC System OFF',
+        position: 'top',
+        topOffset: 130,
+        props: {
+          type: 'info'
+        }
+      });
   };
 
   const handleUnitToggle = () => {

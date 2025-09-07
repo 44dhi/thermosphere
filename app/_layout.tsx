@@ -1,3 +1,4 @@
+import CustomToast from '@/components/ui/Toast';
 import { hasUserEmail } from '@/utils/storage';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
@@ -5,6 +6,13 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import Toast from 'react-native-toast-message';
+
+const toastConfig = {
+  default: ({text1, props}: any) => (
+    <CustomToast text1={text1} props={props} />
+  )
+}
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -49,6 +57,7 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'fade' }} />
       </Stack>
       <StatusBar style="auto" />
+      <Toast config={toastConfig} />
     </ThemeProvider>
   );
 }

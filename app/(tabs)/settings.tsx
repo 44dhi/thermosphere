@@ -11,6 +11,7 @@ import React, { useState } from 'react';
 import { StyleSheet, Switch, useColorScheme, View } from 'react-native';
 import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 
 
 const Settings = () => {
@@ -26,6 +27,15 @@ const Settings = () => {
       temperature: 55,
       currentTemperature: 55,
       active: false,
+    });
+    Toast.show({
+      type: 'default',
+      text1: 'Logged out successfully',
+      position: 'top',
+      topOffset: 130,
+      props: {
+        type: 'info'
+      }
     });
     router.replace('/onboarding');
   }

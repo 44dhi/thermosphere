@@ -7,6 +7,7 @@ import { setUserEmail } from '@/utils/storage';
 import { router } from 'expo-router';
 import React, { useState } from 'react';
 import { KeyboardAvoidingView, Platform, StyleSheet, View } from 'react-native';
+import Toast from 'react-native-toast-message';
 import BackButton from '../ui/BackButton';
 
 interface EnterEmailProps {
@@ -29,9 +30,19 @@ const EnterEmail = ({ setActiveStep, setDirection }: EnterEmailProps) => {
       setLoading(true);
       setUserEmail(email);
       setTimeout(() => {
-        setLoading(false);
-        router.replace('/(tabs)/thermostat');
+        Toast.show({
+          type: 'default',
+          text1: 'Welcome Back Aadhit!',
+          position: 'top',
+          topOffset: 130,
+          props: {
+            type: 'success'
+          }
+        });
       }, 3000);
+      setTimeout(() => {
+        router.replace('/(tabs)/thermostat');
+      }, 5000);
     } catch (error) {
       console.log(error);
       setLoading(false);
