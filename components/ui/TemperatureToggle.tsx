@@ -13,29 +13,25 @@ interface TemperatureToggleProps extends PressableProps {
 const TemperatureToggle = ({ icon, themeOverride, title, active, ...props }: TemperatureToggleProps) => {
   const colorScheme = useColorScheme();
   const colorTheme = themeOverride ? colours[themeOverride] : colours[colorScheme || 'light'];
-  
+
   // Animated value for smooth transitions
   const activeProgress = useSharedValue(active ? 1 : 0);
-  
+
   // Update animated value when active prop changes
   useEffect(() => {
     activeProgress.value = withTiming(active ? 1 : 0, { duration: 300 });
   }, [active, activeProgress]);
-  
+
   // Animated styles for smooth color and shadow transitions
   const animatedStyle = useAnimatedStyle(() => {
     const backgroundColor = interpolateColor(
       activeProgress.value,
       [0, 1],
-      [colorTheme.temperatureToggle.background, 'rgba(81, 74, 255, 0.75)']
+      [colorTheme.temperatureToggle.background, 'rgba(81, 74, 255, 0.75)'],
     );
-    
-    const borderColor = interpolateColor(
-      activeProgress.value,
-      [0, 1],
-      ['transparent', 'rgba(244, 244, 245, 0.20)']
-    );
-    
+
+    const borderColor = interpolateColor(activeProgress.value, [0, 1], ['transparent', 'rgba(244, 244, 245, 0.20)']);
+
     return {
       backgroundColor,
       borderColor,
@@ -45,16 +41,12 @@ const TemperatureToggle = ({ icon, themeOverride, title, active, ...props }: Tem
       elevation: 8 * activeProgress.value, // For Android shadow
     };
   });
-  
+
   return (
     <Pressable
       {...props}
       disabled={props.disabled}
-      style={({ pressed }) => [
-        styles.button,
-        pressed && styles.pressed,
-        props.disabled ? { opacity: 0.5 } : null,
-      ]}
+      style={({ pressed }) => [styles.button, pressed && styles.pressed, props.disabled ? { opacity: 0.5 } : null]}
     >
       <Animated.View style={[styles.animatedContainer, animatedStyle]}>
         {icon}

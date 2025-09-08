@@ -13,7 +13,6 @@ import Animated, { Easing, FadeInDown } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
-
 const Settings = () => {
   const colorScheme = useColorScheme();
   const colorTheme = colorScheme === 'dark' ? colours.dark : colours.light;
@@ -37,8 +36,8 @@ const Settings = () => {
         position: 'top',
         topOffset: 130,
         props: {
-          type: 'info'
-        }
+          type: 'info',
+        },
       });
       router.replace('/onboarding');
     }, 3000);
@@ -78,7 +77,7 @@ const Settings = () => {
               <Switch
                 value={vacationMode}
                 trackColor={{ true: colorTheme.primary.foreground }}
-                thumbColor={ vacationMode ? colorTheme.primary.foreground : colorTheme.fills.main.foreground }
+                thumbColor={vacationMode ? colorTheme.primary.foreground : colorTheme.fills.main.foreground}
                 onValueChange={setVacationMode}
               />
             </View>
@@ -106,13 +105,13 @@ const Settings = () => {
             </View>
             <View style={{ width: '100%', height: 1, backgroundColor: colorTheme.settings.settingItem.divider }} />
             <Slider
-              style={{width: '100%', height: 56}}
+              style={{ width: '100%', height: 56 }}
               minimumValue={0}
               value={brightness}
               maximumValue={1}
               thumbTintColor={colorTheme.primary.foreground}
               minimumTrackTintColor={colorTheme.primary.foreground}
-              maximumTrackTintColor={colorTheme.primary.foreground}  
+              maximumTrackTintColor={colorTheme.primary.foreground}
               onValueChange={setBrightness}
             />
           </View>

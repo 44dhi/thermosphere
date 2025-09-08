@@ -36,8 +36,8 @@ const EnterEmail = ({ setActiveStep, setDirection }: EnterEmailProps) => {
           position: 'top',
           topOffset: 130,
           props: {
-            type: 'success'
-          }
+            type: 'success',
+          },
         });
       }, 3000);
       setTimeout(() => {

@@ -16,7 +16,7 @@ const TemperatureControlButton = ({ icon, themeOverride, ...props }: Temperature
         styles.container,
         { backgroundColor: colorTheme.temperatureButton.background },
         pressed && styles.containerHover,
-        pressed && {backgroundColor: colorTheme.temperatureButton.hover},
+        pressed && { backgroundColor: colorTheme.temperatureButton.hover },
         props.disabled ? { opacity: 0.5 } : null,
       ]}
       {...props}

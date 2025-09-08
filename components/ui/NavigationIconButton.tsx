@@ -21,7 +21,7 @@ const NavigationIconButton = ({ icon, themeOverride, ...props }: NavigationIconB
               ? colorTheme.navigationIconButton.hover
               : 1,
         },
-        pressed && {backgroundColor: colorTheme.navigationIconButton.hover},
+        pressed && { backgroundColor: colorTheme.navigationIconButton.hover },
       ]}
       {...props}
     >

@@ -6,7 +6,17 @@ import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import { Image } from 'expo-image';
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import Animated, { Easing, FadeIn, FadeInDown, FadeOut, FadeOutDown, useAnimatedStyle, useSharedValue, withRepeat, withTiming } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeInDown,
+  FadeOut,
+  FadeOutDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withTiming,
+} from 'react-native-reanimated';
 
 interface WelcomeProps {
   setDirection: (direction: 'left' | 'right') => void;
@@ -44,10 +54,10 @@ const Welcome = ({ setActiveStep, setDirection }: WelcomeProps) => {
     <View style={styles.container}>
       <View style={styles.contentContainer}>
         <Animated.View
-        style={styles.textContainer}
-        entering={FadeInDown.delay(400).duration(400).easing(Easing.out(Easing.quad))}
-        exiting={FadeOutDown.delay(400).duration(400).easing(Easing.in(Easing.quad))}
-      >
+          style={styles.textContainer}
+          entering={FadeInDown.delay(400).duration(400).easing(Easing.out(Easing.quad))}
+          exiting={FadeOutDown.delay(400).duration(400).easing(Easing.in(Easing.quad))}
+        >
           <ThemedText themeOverride="dark" variant="heading.xxx-large">
             ThermoSphere
           </ThemedText>
@@ -56,7 +66,7 @@ const Welcome = ({ setActiveStep, setDirection }: WelcomeProps) => {
           </ThemedText>
         </Animated.View>
         <Animated.View
-          style={{width: '100%'}}
+          style={{ width: '100%' }}
           entering={FadeIn.delay(600).duration(400).easing(Easing.out(Easing.quad))}
           exiting={FadeOut.duration(600).easing(Easing.in(Easing.quad))}
         >

@@ -14,7 +14,16 @@ import { Image } from 'expo-image';
 import { Minus, Plus, Power } from 'lucide-react-native';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Pressable, StyleSheet, useColorScheme, View } from 'react-native';
-import Animated, { Easing, FadeIn, FadeOut, useAnimatedStyle, useSharedValue, withSequence, withSpring, withTiming } from 'react-native-reanimated';
+import Animated, {
+  Easing,
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+  useSharedValue,
+  withSequence,
+  withSpring,
+  withTiming,
+} from 'react-native-reanimated';
 import Toast from 'react-native-toast-message';
 import TemperatureSpokes from '../icons/TemperatureSpokes';
 import ThermoStatControlBackground from '../icons/ThermoStatControlBackground';
@@ -34,7 +43,7 @@ const ThermoStat = () => {
   const [settings, setSettings] = useState(getThermostatSettings());
   const knobRotation = useSharedValue(0);
   const spokeRotation = useSharedValue(0);
-  
+
   // Animated values for text transitions
   const temperatureTextOpacity = useSharedValue(1);
   const currentTempTextOpacity = useSharedValue(1);
@@ -56,34 +65,37 @@ const ThermoStat = () => {
   }, []);
 
   // Function to animate text changes
-  const animateTextChange = useCallback((isTemperatureChange: boolean) => {
-    if (isTemperatureChange) {
-      // Animate temperature text
-      temperatureTextOpacity.value = withSequence(
-        withTiming(0.7, { duration: 150 }),
-        withTiming(1, { duration: 150 })
-      );
-      temperatureTextScale.value = withSequence(
-        withTiming(0.95, { duration: 150 }),
-        withSpring(1, { damping: 15, stiffness: 150 })
-      );
-    } else {
-      // Animate current temperature text
-      currentTempTextOpacity.value = withSequence(
-        withTiming(0.7, { duration: 150 }),
-        withTiming(1, { duration: 150 })
-      );
-      currentTempTextScale.value = withSequence(
-        withTiming(0.95, { duration: 150 }),
-        withSpring(1, { damping: 15, stiffness: 150 })
-      );
-    }
-  }, [temperatureTextOpacity, temperatureTextScale, currentTempTextOpacity, currentTempTextScale]);
+  const animateTextChange = useCallback(
+    (isTemperatureChange: boolean) => {
+      if (isTemperatureChange) {
+        // Animate temperature text
+        temperatureTextOpacity.value = withSequence(
+          withTiming(0.7, { duration: 150 }),
+          withTiming(1, { duration: 150 }),
+        );
+        temperatureTextScale.value = withSequence(
+          withTiming(0.95, { duration: 150 }),
+          withSpring(1, { damping: 15, stiffness: 150 }),
+        );
+      } else {
+        // Animate current temperature text
+        currentTempTextOpacity.value = withSequence(
+          withTiming(0.7, { duration: 150 }),
+          withTiming(1, { duration: 150 }),
+        );
+        currentTempTextScale.value = withSequence(
+          withTiming(0.95, { duration: 150 }),
+          withSpring(1, { damping: 15, stiffness: 150 }),
+        );
+      }
+    },
+    [temperatureTextOpacity, temperatureTextScale, currentTempTextOpacity, currentTempTextScale],
+  );
 
   useEffect(() => {
     const newKnobRotation = getKnobRotation(settings.temperature, settings.unit);
     const newSpokeRotation = getKnobRotation(settings.currentTemperature, settings.unit);
-    
+
     knobRotation.value = withTiming(newKnobRotation, { duration: 300 });
     spokeRotation.value = withTiming(newSpokeRotation, { duration: 300 });
   }, [settings.temperature, settings.currentTemperature, settings.unit, knobRotation, spokeRotation]);
@@ -111,14 +123,14 @@ const ThermoStat = () => {
     setSettings(updatedSettings);
     Toast.hide();
     Toast.show({
-        type: 'default',
-        text1: updatedSettings.active ? 'HVAC System ON' : 'HVAC System OFF',
-        position: 'top',
-        topOffset: 130,
-        props: {
-          type: 'info'
-        }
-      });
+      type: 'default',
+      text1: updatedSettings.active ? 'HVAC System ON' : 'HVAC System OFF',
+      position: 'top',
+      topOffset: 130,
+      props: {
+        type: 'info',
+      },
+    });
   };
 
   const handleUnitToggle = () => {
@@ -149,11 +161,7 @@ const ThermoStat = () => {
   // Animated styles for smooth rotation
   const knobAnimatedStyle = useAnimatedStyle(() => {
     return {
-      transform: [
-        { translateX: '-50%' },
-        { translateY: '-50%' },
-        { rotate: `${knobRotation.value}deg` },
-      ],
+      transform: [{ translateX: '-50%' }, { translateY: '-50%' }, { rotate: `${knobRotation.value}deg` }],
     };
   });
 
@@ -179,13 +187,12 @@ const ThermoStat = () => {
   });
 
   return (
-    <View
-     style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.temperatureContainer}>
         <View style={[styles.thermoStatBackground, { opacity: settings.active ? 1 : 0.5 }]}>
           <ThermoStatControlBackground color={colorScheme === 'dark' ? 'white' : 'black'} />
           <View style={styles.temperatureSpokesContainer}>
-            <TemperatureSpokes color={colorScheme === 'dark' ? 'white' : 'black'} />
+            <TemperatureSpokes />
           </View>
           <View style={styles.temperatureSpokesContainer}>
             <AnimatedImage
@@ -200,28 +207,24 @@ const ThermoStat = () => {
               contentFit="cover"
             />
           </View>
-          {
-            settings.active && (
-              <AnimatedImage
-                entering={FadeIn.duration(300).easing(Easing.out(Easing.quad))}
-                exiting={FadeOut.duration(300).easing(Easing.out(Easing.quad))}
-                source={require('@/assets/images/thermo_knob.png')}
-                style={[
-                  styles.temperatureKnobContainer,
-                  colorScheme === 'light' && {
-                    tintColor: '#666666',
-                  },
-                  knobAnimatedStyle,
-                ]}
-                />
-            )
-          }
+          {settings.active && (
+            <AnimatedImage
+              entering={FadeIn.duration(300).easing(Easing.out(Easing.quad))}
+              exiting={FadeOut.duration(300).easing(Easing.out(Easing.quad))}
+              source={require('@/assets/images/thermo_knob.png')}
+              style={[
+                styles.temperatureKnobContainer,
+                colorScheme === 'light' && {
+                  tintColor: '#666666',
+                },
+                knobAnimatedStyle,
+              ]}
+            />
+          )}
         </View>
         <View style={styles.textContainer}>
           <ThemedText style={{ color: descriptionColor }} variant="paragraph.large.bold">
-            {
-              settings.active ? 'COOLING' : ''
-            }
+            {settings.active ? 'SET TEMP' : ''}
           </ThemedText>
           {settings.active ? (
             <Pressable onPress={handleUnitToggle}>

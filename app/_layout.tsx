@@ -17,10 +17,8 @@ SplashScreen.setOptions({
 SplashScreen.preventAutoHideAsync();
 
 const toastConfig = {
-  default: ({text1, props}: any) => (
-    <CustomToast text1={text1} props={props} />
-  )
-}
+  default: ({ text1, props }: any) => <CustomToast text1={text1} props={props} />,
+};
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
@@ -59,13 +57,13 @@ export default function RootLayout() {
       const timer = setTimeout(async () => {
         await SplashScreen.hideAsync();
       }, 500);
-      
+
       return () => clearTimeout(timer);
     }
   }, [loaded]);
 
   if (!loaded) {
-    return null
+    return null;
   }
 
   return (

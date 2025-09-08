@@ -16,32 +16,34 @@ const Toast = ({ text1, props }: ToastProps) => {
   function renderIcon() {
     switch (props.type) {
       case 'success':
-        return <CheckIcon size={24} color={'lightgreen'} strokeWidth={3} />
+        return <CheckIcon size={24} color={'lightgreen'} strokeWidth={3} />;
       case 'error':
-        return <XIcon size={24} color={'red'} strokeWidth={3} />
+        return <XIcon size={24} color={'red'} strokeWidth={3} />;
       case 'info':
-        return <InfoIcon size={24} color={colorTheme.primary.foreground} strokeWidth={2} />
+        return <InfoIcon size={24} color={colorTheme.primary.foreground} strokeWidth={2} />;
       default:
         return null;
     }
-
   }
 
   return (
     <View
-      style={[styles.container,
+      style={[
+        styles.container,
         props.position === 'bottom' && { bottom: 0 },
         { backgroundColor: colorTheme.toast.background },
         { borderColor: colorTheme.toast.border },
       ]}
     >
       {renderIcon()}
-      <ThemedText style={{ color: colorTheme.fills.main.foreground }} variant="paragraph.large.regular">{text1}</ThemedText>
+      <ThemedText style={{ color: colorTheme.fills.main.foreground }} variant="paragraph.large.regular">
+        {text1}
+      </ThemedText>
     </View>
-  )
-}
+  );
+};
 
-export default Toast
+export default Toast;
 
 const styles = StyleSheet.create({
   container: {
@@ -59,12 +61,12 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-  ...(Platform.OS === 'ios'
-    ? {
-        backdropFilter: 'blur(16px)',
-      }
-    : {
-        backdropFilter: 'blur(16px)',
-      }),
-  }
-})
+    ...(Platform.OS === 'ios'
+      ? {
+          backdropFilter: 'blur(16px)',
+        }
+      : {
+          backdropFilter: 'blur(16px)',
+        }),
+  },
+});

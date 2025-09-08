@@ -29,28 +29,27 @@ const OnboardingButton = ({ children, loading, title, icon, themeOverride, ...pr
         props.disabled ? { opacity: 0.5 } : null,
       ]}
     >
-      {loading &&
-        <LottieView 
-          source={require('@/assets/lotties/spinner_lottie.json')}  
-          autoPlay 
-          loop 
+      {loading && (
+        <LottieView
+          source={require('@/assets/lotties/spinner_lottie.json')}
+          autoPlay
+          loop
           style={styles.loading}
           colorFilters={[
             {
-              keypath: "*",
-              color: colorTheme.fills.main.foreground
-            }
+              keypath: '*',
+              color: colorTheme.fills.main.foreground,
+            },
           ]}
         />
-      }
-      {
-        icon &&
-        <View style={loading ? {opacity: 0} : null}>
-          {icon}
-        </View>
-      }
+      )}
+      {icon && <View style={loading ? { opacity: 0 } : null}>{icon}</View>}
       {title && (
-        <ThemedText themeOverride={themeOverride} style={loading ? {opacity: 0} : null} variant="paragraph.large.bold">
+        <ThemedText
+          themeOverride={themeOverride}
+          style={loading ? { opacity: 0 } : null}
+          variant="paragraph.large.bold"
+        >
           {title}
         </ThemedText>
       )}
