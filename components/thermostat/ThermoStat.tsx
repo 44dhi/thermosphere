@@ -220,7 +220,7 @@ const ThermoStat = () => {
         <View style={styles.textContainer}>
           <ThemedText style={{ color: descriptionColor }} variant="paragraph.large.bold">
             {
-              settings.active ? 'Temperature' : ''
+              settings.active ? 'COOLING' : ''
             }
           </ThemedText>
           {settings.active ? (

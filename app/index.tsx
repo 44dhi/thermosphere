@@ -1,8 +1,9 @@
-import { Redirect } from 'expo-router';
 import React from 'react';
+import { View } from 'react-native';
 
 const index = () => {
-  return <Redirect href="/onboarding" />;
+  return <View>
+  </View>;
 };
 
 export default index;

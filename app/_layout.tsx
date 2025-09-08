@@ -2,11 +2,19 @@ import CustomToast from '@/components/ui/Toast';
 import { hasUserEmail } from '@/utils/storage';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { Slot, useRouter, useSegments } from 'expo-router';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 import Toast from 'react-native-toast-message';
+
+SplashScreen.setOptions({
+  duration: 300,
+  fade: true,
+});
+
+SplashScreen.preventAutoHideAsync();
 
 const toastConfig = {
   default: ({text1, props}: any) => (
@@ -28,34 +36,45 @@ export default function RootLayout() {
   useEffect(() => {
     if (!loaded) return;
 
-    // Use requestAnimationFrame to ensure the component is fully rendered
-    const frame = requestAnimationFrame(() => {
+    const initializeApp = async () => {
       const inAuthGroup = segments[0] === '(tabs)';
+      const userHasEmail = hasUserEmail();
 
-      if (hasUserEmail() && !inAuthGroup) {
-        // User has email stored, redirect to thermostat
+      if (userHasEmail && !inAuthGroup) {
         router.replace('/(tabs)/thermostat');
-      } else if (!hasUserEmail() && inAuthGroup) {
-        // User doesn't have email stored, redirect to onboarding
+      } else if (!userHasEmail) {
         router.replace('/onboarding');
       }
-    });
+
+      await SplashScreen.hideAsync();
+    };
+
+    const frame = requestAnimationFrame(initializeApp);
 
     return () => cancelAnimationFrame(frame);
-  }, [loaded, segments]);
+  }, [loaded, segments, router]);
+
+  useEffect(() => {
+    if (loaded) {
+      const timer = setTimeout(async () => {
+        await SplashScreen.hideAsync();
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [loaded]);
 
   if (!loaded) {
-    // Async font loading only occurs in development.
-    return null;
+    return null
   }
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack initialRouteName="onboarding" screenOptions={{ headerShown: false }}>
-        {/* <Stack.Screen name="index" options={{ headerShown: true, animation: 'slide_from_bottom' }} /> */}
+      {/* <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="onboarding" options={{ animation: 'none' }} />
         <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: 'fade' }} />
-      </Stack>
+      </Stack> */}
+      <Slot />
       <StatusBar style="auto" />
       <Toast config={toastConfig} />
     </ThemeProvider>
